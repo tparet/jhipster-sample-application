@@ -1,0 +1,6 @@
+version: '2'
+services:
+  jhipstersampleapplication-memcached:
+    image: memcached:1.5.22-alpine
+    ports:
+      - '11211:11211'

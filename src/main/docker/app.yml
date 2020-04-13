@@ -1,0 +1,49 @@
+version: '2'
+services:
+  jhipstersampleapplication-app:
+    image: jhipstersampleapplication
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_CLOUD_CONSUL_HOST=consul
+      - SPRING_CLOUD_CONSUL_PORT=8500
+      - SPRING_DATA_MONGODB_URI=mongodb://jhipstersampleapplication-mongodb:27017
+      - SPRING_DATA_MONGODB_DATABASE=jhipsterSampleApplication
+      - JHIPSTER_CACHE_MEMCACHED_SERVERS=jhipstersampleapplication-memcached:11211
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+      - SPRING_DATA_JEST_URI=http://jhipstersampleapplication-elasticsearch:9200
+      - SPRING_ELASTICSEARCH_REST_URIS=http://jhipstersampleapplication-elasticsearch:9200
+      - KAFKA_BOOTSTRAPSERVERS=kafka:9092
+  jhipstersampleapplication-mongodb:
+    extends:
+      file: mongodb.yml
+      service: jhipstersampleapplication-mongodb
+  jhipstersampleapplication-memcached:
+    extends:
+      file: memcached.yml
+      service: jhipstersampleapplication-memcached
+  jhipstersampleapplication-elasticsearch:
+    extends:
+      file: elasticsearch.yml
+      service: jhipstersampleapplication-elasticsearch
+  kafka:
+    extends:
+      file: kafka.yml
+      service: kafka
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+  zookeeper:
+    extends:
+      file: kafka.yml
+      service: zookeeper
+  consul:
+    extends:
+      file: consul.yml
+      service: consul
+
+  consul-config-loader:
+    extends:
+      file: consul.yml
+      service: consul-config-loader
